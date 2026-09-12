@@ -1,1 +1,755 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>اختبار العمليات الحسابية (الجزء الأول) | المدربة أم هشام</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12302e;
+    --ink-soft:#3b5957;
+    --paper:#f6f4ee;
+    --card:#ffffff;
+    --teal:#0f6e64;
+    --teal-deep:#0a4b44;
+    --teal-pale:#e4f1ee;
+    --gold:#c08a2e;
+    --gold-pale:#faf1de;
+    --line:#e1ddd0;
+    --danger:#b3402f;
+    --danger-pale:#fbe9e5;
+    --ok:#227a52;
+    --ok-pale:#e6f4ec;
+    --warn:#c08a2e;
+    --radius:14px;
+    --shadow:0 4px 18px rgba(18,48,46,.08);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    font-family:'Tajawal','Cairo',sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 34px 34px;
+    background-position:center;
+  }
+  h1,h2,h3,.brand{font-family:'Cairo',sans-serif;}
+  bdi{unicode-bidi:isolate;}
+  .app{max-width:760px;margin:0 auto;min-height:100vh;padding:18px 16px 60px;}
+
+  /* ---------- Brand header ---------- */
+  .brandbar{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 4px 18px;
+  }
+  .brandmark{
+    width:46px;height:46px;border-radius:12px;
+    background:linear-gradient(135deg,var(--teal),var(--teal-deep));
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .brandmark svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2;}
+  .brandtext .name{font-weight:800;font-size:17px;color:var(--teal-deep);line-height:1.2;}
+  .brandtext .tag{font-size:12.5px;color:var(--ink-soft);}
+
+  /* ---------- Landing ---------- */
+  .landing-card{
+    background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:34px 26px;box-shadow:var(--shadow);text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .landing-card::before{
+    content:"";position:absolute;inset:0 0 auto 0;height:6px;
+    background:linear-gradient(90deg,var(--gold),var(--teal));
+  }
+  .eyebrow{color:var(--gold);font-weight:700;font-size:13px;letter-spacing:.3px;margin-bottom:6px;}
+  .landing-title{font-size:26px;font-weight:900;color:var(--teal-deep);margin:2px 0 8px;}
+  .landing-sub{color:var(--ink-soft);font-size:15px;line-height:1.9;max-width:480px;margin:0 auto 22px;}
+  .stat-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:26px;}
+  .stat{
+    background:var(--teal-pale);border:1px solid #cfe6e1;border-radius:12px;
+    padding:12px 18px;min-width:110px;
+  }
+  .stat .num{font-weight:900;font-size:22px;color:var(--teal-deep);}
+  .stat .lbl2{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+  .rules{
+    text-align:right;background:var(--gold-pale);border:1px solid #ecd9b0;
+    border-radius:12px;padding:16px 18px;margin-bottom:26px;font-size:14px;color:#6b4d17;line-height:2;
+  }
+  .rules b{color:#563c10;}
+  .btn{
+    appearance:none;border:none;cursor:pointer;font-family:inherit;font-weight:700;
+    border-radius:12px;padding:15px 28px;font-size:16px;transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--teal);color:#fff;box-shadow:0 6px 16px rgba(15,110,100,.32);width:100%;}
+  .btn-primary:hover{background:var(--teal-deep);}
+  .btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink);}
+  .btn-danger{background:var(--danger);color:#fff;}
+  .btn-outline-danger{background:#fff;border:1.5px solid var(--danger);color:var(--danger);}
+
+  /* ---------- Exam header ---------- */
+  .exambar{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:12px 16px;margin-bottom:16px;box-shadow:var(--shadow);
+    position:sticky;top:10px;z-index:5;
+  }
+  .qcount{font-weight:800;color:var(--teal-deep);font-size:15px;}
+  .qcount small{color:var(--ink-soft);font-weight:500;}
+  .timer{
+    display:flex;align-items:center;gap:6px;font-weight:800;color:var(--teal-deep);
+    background:var(--teal-pale);padding:7px 12px;border-radius:10px;font-size:15px;
+  }
+  .timer.low{background:var(--danger-pale);color:var(--danger);}
+  .iconbtn{
+    width:38px;height:38px;border-radius:10px;border:1.5px solid var(--line);background:#fff;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+  }
+  .iconbtn svg{width:18px;height:18px;stroke:var(--ink-soft);fill:none;stroke-width:2;}
+  .iconbtn.flagged{background:var(--gold-pale);border-color:var(--gold);}
+  .iconbtn.flagged svg{stroke:var(--gold);fill:var(--gold);}
+
+  .progress-outer{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:18px;}
+  .progress-inner{height:100%;background:linear-gradient(90deg,var(--gold),var(--teal));transition:width .25s ease;}
+
+  /* ---------- Nav grid ---------- */
+  .navgrid{
+    display:none;background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:16px;margin-bottom:16px;box-shadow:var(--shadow);
+  }
+  .navgrid.open{display:block;}
+  .navgrid h3{margin:0 0 10px;font-size:14px;color:var(--teal-deep);}
+  .navlegend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-soft);margin-bottom:12px;}
+  .legdot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-start:4px;vertical-align:middle;}
+  .navwrap{display:grid;grid-template-columns:repeat(8,1fr);gap:7px;max-height:260px;overflow-y:auto;}
+  .navcell{
+    aspect-ratio:1;border-radius:8px;border:1.5px solid var(--line);background:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;cursor:pointer;
+    color:var(--ink-soft);position:relative;
+  }
+  .navcell.answered{background:var(--ok-pale);border-color:var(--ok);color:var(--ok);}
+  .navcell.current{outline:2px solid var(--teal);outline-offset:1px;}
+  .navcell.flagged::after{
+    content:"";position:absolute;top:-3px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--gold);
+  }
+
+  /* ---------- Question card ---------- */
+  .qcard{
+    background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:22px 20px;box-shadow:var(--shadow);margin-bottom:16px;
+  }
+  .qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .qnum-badge{
+    background:var(--teal-deep);color:#fff;font-weight:800;font-size:13px;
+    padding:4px 12px;border-radius:20px;
+  }
+  .qcat{font-size:12.5px;color:var(--gold);font-weight:700;}
+  .qtext{font-size:17px;font-weight:700;line-height:1.9;color:var(--ink);margin:6px 0 16px;}
+  .diagram{width:100%;max-width:280px;display:block;margin:6px auto 18px;}
+  .diagram *{fill:none;stroke:#0f6e64;stroke-width:2;}
+  .diagram text{fill:#12302e;stroke:none;font-size:13px;font-family:'Tajawal',sans-serif;font-weight:600;}
+  .diagram .fillmark{fill:#e4f1ee;stroke:#0f6e64;}
+  .diagram .accent{stroke:#c08a2e;stroke-dasharray:5,4;}
+  .diagram .thin{stroke-width:1.4;}
+
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .opt{
+    display:flex;align-items:center;gap:12px;
+    border:1.6px solid var(--line);border-radius:12px;padding:13px 15px;cursor:pointer;
+    background:#fff;transition:border-color .12s ease, background .12s ease;
+  }
+  .opt:hover{border-color:#bcd9d4;}
+  .opt .letter{
+    width:30px;height:30px;border-radius:9px;background:var(--teal-pale);color:var(--teal-deep);
+    font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .opt .otext{font-size:15.5px;font-weight:600;}
+  .opt.selected{border-color:var(--teal);background:var(--teal-pale);}
+  .opt.selected .letter{background:var(--teal);color:#fff;}
+
+  .opt.correct{border-color:var(--ok);background:var(--ok-pale);}
+  .opt.correct .letter{background:var(--ok);color:#fff;}
+  .opt.wrong{border-color:var(--danger);background:var(--danger-pale);}
+  .opt.wrong .letter{background:var(--danger);color:#fff;}
+
+  .explain{
+    margin-top:14px;background:var(--gold-pale);border-inline-start:4px solid var(--gold);
+    border-radius:10px;padding:12px 14px;font-size:14px;color:#6b4d17;line-height:1.9;display:none;
+  }
+  .explain.show{display:block;}
+
+  .navbtns{display:flex;gap:10px;margin-top:6px;}
+  .navbtns .btn{flex:1;}
+
+  /* ---------- Results ---------- */
+  .score-hero{
+    background:linear-gradient(135deg,var(--teal-deep),var(--teal));color:#fff;border-radius:20px;
+    padding:32px 24px;text-align:center;box-shadow:var(--shadow);margin-bottom:18px;
+  }
+  .score-hero .brand-small{font-size:13px;opacity:.85;margin-bottom:4px;}
+  .score-hero h2{font-size:20px;margin:0 0 14px;font-weight:800;}
+  .score-circle{
+    width:132px;height:132px;border-radius:50%;border:6px solid rgba(255,255,255,.25);
+    display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 12px;
+  }
+  .score-circle .pct{font-size:32px;font-weight:900;}
+  .score-circle .of{font-size:12px;opacity:.85;}
+  .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+  .rbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 8px;text-align:center;}
+  .rbox .n{font-size:22px;font-weight:900;}
+  .rbox .l{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .rbox.ok .n{color:var(--ok);}
+  .rbox.bad .n{color:var(--danger);}
+  .rbox.na .n{color:var(--ink-soft);}
+  .actionrow{display:flex;gap:10px;margin-bottom:20px;}
+  .actionrow .btn{flex:1;}
+
+  .review-item{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 16px;margin-bottom:12px;
+  }
+  .review-item .rtitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .review-item .rtag{font-size:12px;font-weight:800;padding:3px 10px;border-radius:20px;}
+  .rtag.ok{background:var(--ok-pale);color:var(--ok);}
+  .rtag.bad{background:var(--danger-pale);color:var(--danger);}
+  .rtag.na{background:#eee;color:#777;}
+  .review-item .rq{font-weight:700;font-size:15px;margin-bottom:6px;line-height:1.8;}
+  .review-item .rline{font-size:13.5px;color:var(--ink-soft);margin:3px 0;}
+  .review-item .rline b{color:var(--ink);}
+
+  .hidden{display:none !important;}
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-thumb{background:#c9c3af;border-radius:3px;}
+  @media(max-width:420px){
+    .navwrap{grid-template-columns:repeat(6,1fr);}
+    .result-grid{grid-template-columns:repeat(3,1fr);}
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+/* ============================= SVG HELPERS ============================= */
+function svgWrap(inner, vb){ return `<svg viewBox="${vb||'0 0 240 190'}" class="diagram">${inner}</svg>`; }
+function L(x1,y1,x2,y2,cls=''){ return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${cls}"/>`; }
+function PG(pts,cls=''){ return `<polygon points="${pts}" class="${cls}"/>`; }
+function PL(pts,cls=''){ return `<polyline points="${pts}" class="${cls}"/>`; }
+function CI(cx,cy,r,cls=''){ return `<circle cx="${cx}" cy="${cy}" r="${r}" class="${cls}"/>`; }
+function TX(x,y,s,cls=''){ return `<text x="${x}" y="${y}" text-anchor="middle" class="${cls}">${s}</text>`; }
+function rightAngleMark(x,y,size,rot){
+  const s=size;
+  if(rot===0) return `<polyline points="${x},${y-s} ${x+s},${y-s} ${x+s},${y}" class="thin"/>`;
+  if(rot===90) return `<polyline points="${x-s},${y-s} ${x-s},${y} ${x},${y}" class="thin"/>`;
+  if(rot===180) return `<polyline points="${x-s},${y} ${x-s},${y+s} ${x},${y+s}" class="thin"/>`;
+  return `<polyline points="${x},${y+s} ${x+s},${y+s} ${x+s},${y}" class="thin"/>`;
+}
+function arc(cx,cy,r,a1,a2,cls=''){
+  const p1x=cx+r*Math.cos(a1*Math.PI/180), p1y=cy-r*Math.sin(a1*Math.PI/180);
+  const p2x=cx+r*Math.cos(a2*Math.PI/180), p2y=cy-r*Math.sin(a2*Math.PI/180);
+  const large = Math.abs(a2-a1)>180?1:0;
+  return `<path d="M ${p1x} ${p1y} A ${r} ${r} 0 ${large} 0 ${p2x} ${p2y}" class="${cls}"/>`;
+}
+function ray(cx,cy,len,angleDeg){
+  const rad=angleDeg*Math.PI/180;
+  return [cx+len*Math.cos(rad), cy-len*Math.sin(rad)];
+}
+
+/* ---- shape diagrams ---- */
+function diaTriHeight(base,h){
+  const inner = PG("20,150 220,150 120,25") +
+    L(120,150,120,25,'accent') + rightAngleMark(120,150,9,0) +
+    TX(120,168,base+' سم') + TX(150,90,h+' سم');
+  return svgWrap(inner);
+}
+function diaRightTri(a,b){
+  const inner = PG("30,150 30,30 210,150") + rightAngleMark(30,150,10,0) +
+    TX(12,95,a+' سم') + TX(120,168,b+' سم');
+  return svgWrap(inner);
+}
+function diaEquilateral(side){
+  const inner = PG("120,25 20,150 220,150") +
+    TX(60,90,'‏٫') + TX(120,168,side+' سم') +
+    L(65,113,72,120,'thin') + L(155,113,148,120,'thin') + L(112,145,128,145,'thin');
+  return svgWrap(inner);
+}
+function diaParallelogram(base,h){
+  const inner = PG("50,150 220,150 190,30 20,30") +
+    L(50,150,50,30,'accent') + rightAngleMark(50,145,8,90) +
+    TX(135,168,base+' سم') + TX(30,95,h+' سم');
+  return svgWrap(inner);
+}
+function diaSquare(side){
+  const inner = PG("40,30 200,30 200,150 40,150") + TX(120,168,side+' سم');
+  return svgWrap(inner);
+}
+function diaSquareDiagonal(d){
+  const inner = PG("40,30 200,30 200,150 40,150") + L(40,30,200,150,'accent') + TX(140,80,d+' سم');
+  return svgWrap(inner);
+}
+function diaRectangle(w,h){
+  const inner = PG("30,45 210,45 210,145 30,145") + TX(120,163,w+' سم') + TX(14,98,h+' سم');
+  return svgWrap(inner);
+}
+function diaRhombusH(base,h){
+  const inner = PG("120,20 210,95 120,170 30,95") +
+    L(120,170,120,95,'accent') + rightAngleMark(120,168,8,180) +
+    TX(178,140,base+' سم') + TX(140,135,h+' سم');
+  return svgWrap(inner);
+}
+function diaRhombusD(d1,d2){
+  const inner = PG("120,20 210,95 120,170 30,95") +
+    L(120,20,120,170,'accent') + L(30,95,210,95,'accent') +
+    TX(140,55,d1+' سم') + TX(120,88,d2+' سم');
+  return svgWrap(inner);
+}
+function diaTrapezoid(top,bottom,h){
+  const inner = PG("70,30 170,30 220,150 20,150") +
+    L(70,30,70,150,'accent') + rightAngleMark(70,145,8,90) +
+    TX(120,20,top+' سم') + TX(120,168,bottom+' سم') + TX(50,95,h+' سم');
+  return svgWrap(inner);
+}
+function diaHexagon(side){
+  const pts="90,25 150,25 190,95 150,165 90,165 50,95";
+  return svgWrap(PG(pts) + TX(120,20,side+' سم'));
+}
+function diaCircleR(r){
+  const inner = CI(120,95,60) + L(120,95,180,95,'accent') + TX(150,88,r+' سم');
+  return svgWrap(inner);
+}
+function diaCircleD(d){
+  const inner = CI(120,95,60) + L(60,95,180,95,'accent') + TX(120,85,d+' سم');
+  return svgWrap(inner);
+}
+function diaStairs(w,h){
+  const inner = PL("30,150 30,60 70,60 70,100 130,100 130,150",'') +
+    TX(80,168,w+' سم') + TX(14,105,h+' سم');
+  return svgWrap(inner);
+}
+function diaAngleRight(leg1,leg2,ang,findLabel){
+  const inner = PG("30,150 30,30 210,150") + rightAngleMark(30,150,10,0) +
+    arc(30,150,26,0,ang,'thin') + TX(58,138,ang+'°') +
+    TX(14,95,leg1) + TX(120,168,findLabel);
+  return svgWrap(inner);
+}
+function diaTree(hyp,base){
+  const inner = L(30,150,30,45) + L(30,150,190,150) + L(30,45,190,150,'accent') +
+    rightAngleMark(30,150,9,0) + TX(15,100,'؟') + TX(115,168,base+' م') + TX(120,90,hyp+' م');
+  return svgWrap(inner);
+}
+function diaInscribedTri(r){
+  const inner = CI(120,95,65) + PG("120,32 175,140 65,140") + L(120,95,120,32,'accent') + TX(140,65,r+' سم');
+  return svgWrap(inner);
+}
+function diaInscribedSquare(diag){
+  const inner = CI(120,95,60) + PG("120,35 180,95 120,155 60,95") + L(120,35,120,155,'accent') + TX(140,90,diag+' سم');
+  return svgWrap(inner);
+}
+function diaCircleInSquare(side){
+  const inner = PG("40,25 200,25 200,165 40,165") + CI(120,95,80) + TX(120,15,side+' سم');
+  return svgWrap(inner);
+}
+function diaSquareInCircle(d){
+  const inner = CI(120,95,85) + PG("120,10 205,95 120,180 35,95") + L(120,10,120,180,'accent') + TX(150,45,d+' سم');
+  return svgWrap(inner);
+}
+function diaHexInCircle(r){
+  const inner = CI(120,95,68) + PG("120,27 178,61 178,129 120,163 62,129 62,61") + L(120,95,120,27,'accent') + TX(140,62,r+' سم');
+  return svgWrap(inner);
+}
+function diaTangentPoint(t1,t2){
+  const inner = CI(150,110,45) + TX(50,60,'أ') + L(50,60,150,65,'') + L(50,60,150,155,'') +
+    TX(105,55,t1+' سم') + (t2? TX(100,120,t2+' سم'):'');
+  return svgWrap(inner);
+}
+function diaTangentTriangle(tan,r,findLabel){
+  const inner = CI(160,130,40) + L(160,130,160,90,'accent') + L(160,90,60,50,'') + L(60,50,160,130,'accent') +
+    rightAngleMark(160,90,8,90) + TX(180,110,r+' سم') + TX(95,60,tan+' سم') + TX(95,110,findLabel);
+  return svgWrap(inner);
+}
+function diaLinearPair(given){
+  const inner = L(20,110,220,110) + L(120,110,170,35,'accent') +
+    arc(120,110,40,0,55,'thin') + TX(148,80,'س') + arc(120,110,55,55,180,'thin') + TX(72,90,given+'°');
+  return svgWrap(inner,'0 0 240 150');
+}
+function diaThreeLine(a1,a2){
+  const inner = L(20,110,220,110) + L(80,110,100,35,'accent') + L(160,110,180,35,'accent') +
+    TX(66,80,a1+'°') + TX(190,80,a2+'°') + TX(128,80,'س');
+  return svgWrap(inner,'0 0 240 150');
+}
+function diaComplementary(){
+  const inner = L(30,150,30,30) + L(30,150,190,150) + L(30,150,140,60,'accent') +
+    rightAngleMark(30,150,10,0) + TX(55,105,'س') + TX(105,130,'٢س');
+  return svgWrap(inner);
+}
+function diaExterior(a1,a2){
+  const inner = PG("40,150 130,40 220,150") + L(40,150,260,150) +
+    TX(110,55,a1+'°') + TX(200,60,a2+'°') + TX(240,168,'س');
+  return svgWrap(inner,'0 0 270 190');
+}
+function diaCentralInscribed(mode,given){
+  const inner = CI(120,100,68) +
+    (mode==='central'? (PG("120,100 178,60 178,140",'fillmark')+TX(140,100,given+'°')+PL("178,60 62,140 178,140",''))
+      : (PL("178,60 62,140 178,140",'')+arc(178,100,20,140,220,'thin')+TX(160,100,given+'°')) ) +
+    TX(120,180,'أوجد قيمة الزاوية المطلوبة');
+  return svgWrap(inner,'0 0 240 200');
+}
+function diaSameArc(given){
+  const inner = CI(120,100,68) + PL("60,70 180,70 120,150 60,70",'') + PL("60,70 120,150",'accent') +
+    TX(70,60,given+'°') + TX(170,60,'س');
+  return svgWrap(inner);
+}
+function diaCyclic(given){
+  const inner = CI(120,100,68) + PG("70,50 175,80 165,150 60,130") +
+    TX(90,65,given+'°') + TX(140,135,'س');
+  return svgWrap(inner);
+}
+function diaXcross(given){
+  const inner = L(30,30,210,170) + L(30,170,210,30) + arc(120,100,30,20,70,'thin') +
+    TX(150,75,given+'°') + TX(160,120,'س') + TX(85,120,'ص');
+  return svgWrap(inner);
+}
+function diaGrid(cols,rows){
+  let inner='';
+  const w=180,h=120,x0=30,y0=40,cw=w/cols,ch=h/rows;
+  for(let i=0;i<=cols;i++) inner+=L(x0+i*cw,y0,x0+i*cw,y0+h);
+  for(let j=0;j<=rows;j++) inner+=L(x0,y0+j*ch,x0+w,y0+j*ch);
+  return svgWrap(inner);
+}
+function diaTriGrid(n){
+  let inner='';
+  const top=[120,20], bl=[30,160], br=[210,160];
+  inner+=PG("120,20 30,160 210,160");
+  for(let i=1;i<n;i++){
+    const lx = top[0]+(bl[0]-top[0])*i/n, ly = top[1]+(bl[1]-top[1])*i/n;
+    const rx = top[0]+(br[0]-top[0])*i/n, ry = top[1]+(br[1]-top[1])*i/n;
+    inner+=L(lx,ly,rx,ry);
+  }
+  for(let i=1;i<n;i++){
+    const bx = bl[0]+(br[0]-bl[0])*i/n, by=160;
+    const tx1 = top[0]+(bl[0]-top[0])*(0)/n;
+    inner+=L(bx,by, top[0]+(bx-bl[0])*0,20); // simplified vertical-ish guide (visual only)
+  }
+  return svgWrap(inner);
+}
+
+/* ============================= QUESTIONS ============================= */
+const Q = [];
+function add(cat,text,diagram,options,correct,explain){
+  Q.push({id:Q.length+1,cat,text,diagram,options,correct,explain,flag:false,answer:null});
+}
+
+add('الكسور العشرية', '١٠٠٠ - ٠,٠٠١ = ؟', null, ['٩٩٩,٩٩', '٩٩٩,٩٩٩٩', '٩٩٩,٩٩٩', '٩٩٩٩,٩٩٩٩'], 2, '١٠٠٠ - ٠,٠٠١ = ٩٩٩,٩٩٩');
+add('الكسور العشرية', '٠,٠٠١ + ٠,٠٢ + ٠,٣ + ٤ + ٥٠ = ؟', null, ['٥٤,١٢٣', '٥٤,٣٢١', '٥٤,٠٢٣١', '٤٥,٣٢١'], 1, 'بجمع الأعداد على التوازي العشري نحصل على ٥٤,٣٢١');
+add('الكسور العشرية', '٠,٠٠٠١ + ٠,٠٠١ + ٠,٠١ + ٠,١ = ؟', null, ['٠,١٠١١', '٠,١١١', '٠,١٢٣', '٠,١١١١'], 3, 'بجمع الأعداد نحصل على ٠,١١١١');
+add('الكسور العشرية', '٠,٠٣ × ٠,٣ × ٠,٠٠٣ = ؟', null, ['٠,٢٧', '٠,٠٠٠٢٧', '٠,٠٢٧', '٠,٠٠٠٠٢٧'], 1, 'بضرب الأعداد العشرية: ٠,٠٣ × ٠,٣ × ٠,٠٠٣ = ٠,٠٠٠٢٧');
+add('الكسور العشرية', '٤٠ × ٢ × ٠,٤ × ٠,٠٤ × ٠,٠٠٤ = ؟', null, ['٠,٥١٢', '٠,٠٠٥١٢', '٠,٠٥١٢', '٠,٠٠٠٠٥١٢'], 1, 'بضرب الأعداد: ٤٠×٢×٠,٤×٠,٠٤×٠,٠٠٤ = ٠,٠٠٥١٢');
+add('الكسور العشرية', '٠,١ ÷ ٠,٠٥ = ؟', null, ['٠,٢', '٠,٠٢', '٠,٥', '٢'], 3, '٠,١ ÷ ٠,٠٥ = ٢');
+add('الكسور العشرية', '٤ ÷ ٠,٠٢ = ؟', null, ['٠,٢', '٠,٠٢', '٢٠٠', '٢٠'], 2, '٤ ÷ ٠,٠٢ = ٢٠٠');
+add('الكسور العشرية', '٠,٥ ÷ ٢ = ؟', null, ['٠,٢', '٠,٢٥', '٢,٥', '٢٠'], 1, '٠,٥ ÷ ٢ = ٠,٢٥');
+add('التقريب', 'أي مما يلي لو قُرِّب لأقرب جزء من مئة يساوي ٦,٧٢ ؟', null, ['٦,٧٠', '٦,٧١', '٦,٧١٤', '٦,٧١٥٣'], 3, '٦,٧١٥٣ عند تقريبه لأقرب جزء من مئة (منزلتين عشريتين) يصبح ٦,٧٢');
+add('التقريب', 'ما أقرب عدد لـِ ٥,٧٦٠٤ ؟', null, ['٥,٧٦٥', '٥,٧٦٦', '٥,٧٧', '٥,٨'], 0, '٥,٧٦٥ هو الأقرب قيمةً لـِ ٥,٧٦٠٤ من بين الخيارات');
+add('القيمة المكانية', 'ما رقم الألوف في العدد (٩٦٥٣٤) ؟', null, ['٩', '٦', '٥', '٣'], 1, 'رقم الألوف في ٩٦٥٣٤ هو ٦');
+add('القيمة المكانية', 'ما القيمة المنزلية لرقم الألوف في العدد (٩٦٥٣٤) ؟', null, ['٦٠٠', '٦٠٠٠٠', '٦٠٠٠', '٦'], 2, 'القيمة المنزلية لرقم الألوف (٦) هي ٦٠٠٠');
+add('القيمة المكانية', 'ما عدد الألوف في العدد (٩٦٥٣٤) ؟', null, ['٦', '٩٦', '٩٦٥', '٩'], 1, 'عدد الألوف الكاملة في ٩٦٥٣٤ هو ٩٦');
+add('القيمة المكانية', 'ما عدد المئات في العدد (٣٥٤٩) ؟', null, ['٣', '٣٥٤', '٣٥', '٥'], 2, 'عدد المئات الكاملة في ٣٥٤٩ هو ٣٥');
+add('القيمة المكانية', 'ما عدد الخمسينات في العدد (٣٥٤٩) ؟', null, ['٣٥', '٧٠', '٧١', '٣٥٤'], 1, '٣٥٤٩ ÷ ٥٠ = ٧٠ خمسينًا (بدون كسر)');
+add('القيمة المكانية', 'ما عدد الخمسينات في العدد (٣٥٥٠) ؟', null, ['٣٥', '٧٠', '٧١', '٣٥٤'], 2, '٣٥٥٠ ÷ ٥٠ = ٧١ خمسينًا بالضبط');
+add('ترتيب العمليات', '٥(١٢٠ - ٢٠) + ٣ × ١٠٠ = .........', null, ['٧٠٠', '١٥٠٠', '٨٠٠', '٤٠٠'], 2, '٥×١٠٠ + ٣×١٠٠ = ٥٠٠ + ٣٠٠ = ٨٠٠');
+add('ترتيب العمليات', '٣ + ٢ × ٤ ÷ ٢ = ؟', null, ['٥,٥', '٧', '٥', '١٠'], 1, 'حسب ترتيب العمليات: ٢×٤÷٢ = ٤، ثم ٣+٤ = ٧');
+add('الكسور', '١/٤ + ٤/٤ + ٤/٤ = .........', null, ['٢,٢٥', '٢,٥', '٣', '٤'], 0, '١/٤ + ١ + ١ = ٢,٢٥');
+add('الكسور', '١٥/٩ × ٢٧/٢٥ = .........', null, ['٥/٩', '٩/٥', '٥/٨', '٣/٥'], 1, 'بالاختزال: (١٥/٩)×(٢٧/٢٥) = (٥/٣)×(٢٧/٢٥) = ٩/٥');
+add('الكسور', '٥/٩ ÷ ٢٥/٣٦ = .........', null, ['٤/٥', '٩/٥', '٥/٤', '٣/٥'], 0, '٥/٩ ÷ ٢٥/٣٦ = ٥/٩ × ٣٦/٢٥ = ٤/٥');
+add('الأسس', '-(١/٢)^-١ = .........', null, ['٢', '-٢', '٠,٥٠', '٠,٥'], 1, '(١/٢)^-١ = ٢، وبإضافة الإشارة السالبة: -٢');
+add('الكسور', '[ (١/٢)^-١ + (١/٣)^-١ + (١/٥)^-١ + (١/٧)^-١ ]^-١ = .........', null, ['١٧', '١/١٧', '١٥', '١/١٥'], 1, 'المجموع داخل القوس = ٢+٣+٥+٧ = ١٧، ثم أُس -١ يعطي ١/١٧');
+add('الكسور', '١ + ١/(٣/٥) = .........', null, ['٨/٥', '٥/٣', '٥/٨', '٣/٥'], 2, '١ / (٣/٥ + ١) = ١ / (٨/٥) = ٥/٨');
+add('الكسور', '(٣/٤) ÷ (٤/٧) = .........', null, ['١٦/٢١', '٢١/١٦', '٢٨/١٢', '١'], 1, '(٣/٤) × (٧/٤) = ٢١/١٦');
+add('الكسور', '(٥/٣) ÷ (٣/٥) = .........', null, ['٢٥/٩', '٩/٢٥', '١٥/٩', '١'], 0, '(٥/٣) × (٥/٣) = ٢٥/٩');
+add('خواص الأعداد', 'أي الأعداد التالية يمكن وضعه بصورة ٣م حيث م عدد صحيح؟', null, ['٥٥', '٥٥٥', '٥٥٥٥٥', '٥٥٥٥'], 1, '٥٥٥ ÷ ٣ = ١٨٥ (عدد صحيح)، فمجموع أرقامه ١٥ يقبل القسمة على ٣');
+add('خواص الأعداد', 'أي الأعداد التالية يمكن وضعه بصورة ٤م حيث م عدد صحيح؟', null, ['٣٤١٢٢', '٣٤١٣٢', '٣٤١٤٢', '٣٤١١٤'], 1, '٣٤١٣٢ تنتهي بـِ ٣٢ وهي تقبل القسمة على ٤');
+add('خواص الأعداد', 'أي مما يلي يقبل القسمة على ١١ ولا يقبل القسمة على ٤؟', null, ['٢٥٠٠', '٢١٨٩', '٤٤', '٢٢٨٨'], 1, '٢١٨٩ = ١١×١٩٩ فهو يقبل القسمة على ١١، وآخر رقمين ٨٩ لا يقبلان القسمة على ٤');
+add('الأعداد الزوجية والفردية', 'إذا كان ك عددًا زوجيًا فأي مما يلي يجب أن يكون زوجيًا؟', null, ['٥ك+٣', 'ك+٣', '٢ك+١', '٣ك+٢'], 3, '٣ك زوجي دائمًا لأن ك زوجي، وزوجي + ٢ يبقى زوجيًا');
+add('الأعداد الموجبة والسالبة', 'إذا كان ك عددًا سالبًا فأي مما يلي يجب أن يكون موجبًا؟', null, ['ك٣', '-ك٢', 'ك٤', 'ك٥'], 2, 'سالب مرفوع لأس زوجي (٤) يكون موجبًا دائمًا');
+add('الكسور', 'كم ثمن في النصف؟', null, ['٣', '٤', '٨', '١٦'], 1, '(١/٢) ÷ (١/٨) = ٤');
+add('الكسور', 'كم ربع في ٨ ؟', null, ['٢', '٣٢', '١٦', '١٢'], 1, '٨ ÷ (١/٤) = ٣٢');
+add('خواص الضرب', 'ما ناتج ضرب (٩-١٤)(٩-١٣)(٩-١٢)(٩-١١) ..... (٩-١)(٩-٠) ؟', null, ['٩×٨×٧×...×١', 'صفر', '٥٠×...×(-٤)×...×١', '٦×٥×٤×...×١'], 1, 'أحد عوامل الضرب هو (٩-٩) = صفر، فالناتج كله يساوي صفرًا');
+add('خواص الضرب', 'ما ناتج ضرب (١٠٠٠-١)(١٠٠٠-٢)(١٠٠٠-٣) .........', null, ['١٠٠٠', '٩٠٠', '١', '٠'], 3, 'عند الوصول للعامل (١٠٠٠-١٠٠٠) يصبح الناتج صفرًا');
+add('الأسس', 'ضعف العدد ٢^٥ = ؟', null, ['٢^١٠', '٢^٢٥', '٢^٦', '١^٥'], 2, '٢ × ٢^٥ = ٢^٦');
+add('الأسس', 'نصف العدد ٢^٨ = ؟', null, ['٢^٤', '٢^٦', '٢^٧', '١^٨'], 2, '٢^٨ ÷ ٢ = ٢^٧');
+add('الأسس', 'ثلث العدد ٣^٩ = ؟', null, ['٣^٣', '٣^٨', '٣^٦', '١^٩'], 1, '٣^٩ ÷ ٣ = ٣^٨');
+add('الأسس', 'ربع العدد ٢^٨ = ؟', null, ['٢^٢', '٢^٦', '٢^٧', '١^٨'], 1, '٢^٨ ÷ ٢^٢ = ٢^٦');
+add('الأسس', '(٢^٤)^٣ = .........', null, ['٢^٦', '٢^٨', '٢^١٢', '٢^٢'], 2, 'بضرب الأسس: ٤×٣ = ١٢، فالناتج ٢^١٢');
+add('ترتيب العمليات', '٢٠^٣ + ٢٠^١ + ٢٠^٢ + ٢٠^٠ = .........', null, ['٨٤٢٠', '٨٤٠٠', '٨٤٢١', '٨٢٠٠'], 2, '٨٠٠٠ + ٢٠ + ٤٠٠ + ١ = ٨٤٢١');
+add('الأسس', '٢^٤ + ٢^٤ = .........', null, ['٢^٨', '٢^٥', '٤^٤', '٢^٣'], 1, '٢×٢^٤ = ٢^٥');
+add('الأسس', '٣^٥ + ٣^٥ + ٣^٥ = .........', null, ['٣^٥', '٣^١٥', '٣^٦', '٣^٩'], 2, '٣×٣^٥ = ٣^٦');
+add('فرق المربعين', '٥٢^٢ - ٥١^٢ = .........', null, ['١', '٥١', '٥٢', '١٠٣'], 3, 'الفرق بين مربعين متتاليين = مجموعهما: ٥٢+٥١ = ١٠٣');
+add('فرق المربعين', '٧٥^٢ - ٢٥^٢ = .........', null, ['٥٠٠', '٥٠٠٠', '٥٠٥٠', '٥٥٠٠'], 1, '(٧٥-٢٥)(٧٥+٢٥) = ٥٠×١٠٠ = ٥٠٠٠');
+add('الجذور', '١٠ ÷ √٢٧ = .........', null, ['٥', '٥√٢٧', '٢√٥', '√٢٧'], 2, 'بعد ترشيد المقام وتبسيط الناتج يكون الأقرب من الخيارات هو ٢√٥');
+add('الجذور', '(√٢ - √٣)(√٢ + √٣) = .........', null, ['١', '٢', '-١', '√٥'], 2, '(√٢)²-(√٣)² = ٢-٣ = -١');
+add('الجذور', '(√٥ + √٣)(√٥ - √٣) = .........', null, ['-٢', '-١', '٢', '√٧٧'], 2, '(√٥)²-(√٣)² = ٥-٣ = ٢');
+add('الجذور', '٣ ÷ (√٥ + √٢) = .........', null, ['√٥ + √٢', '√٥ - √٢', '٢√٥', '√٥'], 1, 'بترشيد المقام: ٣(√٥-√٢) ÷ (٥-٢) = √٥ - √٢');
+add('الجذور', '٢ ÷ (√٥ - √٣) = .........', null, ['√٥ + √٣', '√٥ - √٣', '٢√٥', '√٥'], 0, 'بترشيد المقام: ٢(√٥+√٣) ÷ (٥-٣) = √٥ + √٣');
+add('الجذور', '٤√(٨١×٨١×٨١×٨١) = .........', null, ['٣', '٩', '√٧٥', '٨١'], 3, 'الجذر الرابع لحاصل ضرب ٨١ أربع مرات هو ٨١ نفسه');
+add('الجذور', '٤√(٦٤×٦٤×٦٤×٦٤) = .........', null, ['٦٤', '٨', '٢√٧٢', '٢'], 0, 'الجذر الرابع لحاصل ضرب ٦٤ أربع مرات هو ٦٤ نفسه');
+add('الجذور', '٤√(٨١+٨١+٨١+٨١) = .........', null, ['٨١', '٣√٢', '٢√٣', '٣'], 1, 'المجموع = ٤×٨١ = ٣٢٤ = ٣^٤×٤، فالجذر الرابع = ٣√٢');
+add('الجذور', '٣√٦٤ = .........', null, ['٢', '٤', '٢٧', '٧٨'], 1, 'الجذر التكعيبي لـِ ٦٤ هو ٤');
+add('الجذور', '√( ٦٣/٥ + ٣٧/٥ ) = .........', null, ['٢', '٥√٢٧', '٢٠√٥', '٢√٥'], 3, '٦٣/٥ + ٣٧/٥ = ١٠٠/٥ = ٢٠، و√٢٠ = ٢√٥');
+add('الجذور', '√٥٠ + √٣٢ = .........', null, ['٢√٢', '٩√٢', '√٢', '٨٧√٢'], 1, '√٥٠ = ٥√٢ ، √٣٢ = ٤√٢ ، فالمجموع = ٩√٢');
+add('الجذور', '√٤٨ - √٢٧ = .........', null, ['٢√٣', '٧√٣', '√٣', '١٢√٣'], 2, '√٤٨ = ٤√٣ ، √٢٧ = ٣√٣ ، فالفرق = √٣');
+add('الجذور والأسس', 'الجذر العاشر للعدد ٢٥٦ = .........', null, ['٢^٠,٦', '٢^٠,٧', '٢^٠,٨', '٢^٠,٩'], 2, '٢٥٦ = ٢^٨ ، والجذر العاشر منه = ٢^(٨/١٠) = ٢^٠,٨');
+add('الجذور والأسس', 'الجذر الخامس للعدد ٣^٣ = .........', null, ['٣^٠,٦', '٣^٠,٧', '٣^٠,٨', '٣^٠,٩'], 0, 'الجذر الخامس لـ ٣^٣ = ٣^(٣/٥) = ٣^٠,٦');
+add('التقدير', '٢١٨٥٤٦٨١٢ ÷ ٥٤٦٣٧٠ ≈ عدد منازله (أرقامه) .........', null, ['٣', '٤', '٥', '٢٦'], 0, 'ناتج القسمة التقريبي حوالي ٤٠٠، وهو عدد من ٣ منازل');
+add('عمليات حسابية', '٢٥٣٤ × ٥٤٧ = .........', null, ['١٣٨٦٠٩٨', '١٣٨٦٢٧٧', '١٣٨٦٣٦٣', '١٣٨٦١٠٥'], 0, '٢٥٣٤ × ٥٤٧ = ١٣٨٦٠٩٨');
+add('أنماط الأعداد', 'ما رقم آحاد ٣^٢٠١٨ ؟', null, ['٣', '١', '٩', '٧'], 2, 'أرقام آحاد ٣^ن تتكرر بدورة (٣،٩،٧،١)، وباقي قسمة ٢٠١٨ على ٤ يساوي ٢، فرقم الآحاد هو ٩');
+add('أنماط الأعداد', 'ما رقم آحاد ٢^٢٠١٩ ؟', null, ['٢', '٦', '٨', '٤'], 2, 'أرقام آحاد ٢^ن تتكرر بدورة (٢،٤،٨،٦)، وباقي قسمة ٢٠١٩ على ٤ يساوي ٣، فرقم الآحاد هو ٨');
+
+// Shuffle into a different order than the source PDF
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+}
+shuffleArray(Q);
+Q.forEach((q,i)=>{ q.id = i+1; });
+
+/* ============================= APP STATE ============================= */
+const TOTAL_TIME = 70*60; // 70 minutes
+let state = {
+  screen:'landing', // landing | exam | results
+  idx:0,
+  timeLeft: TOTAL_TIME,
+  timerHandle:null,
+  navOpen:false,
+  reviewMode:false
+};
+
+function fmtTime(s){
+  const m = Math.floor(s/60), sec = s%60;
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+function startExam(){
+  state.screen='exam'; state.idx=0; state.timeLeft=TOTAL_TIME;
+  Q.forEach(q=>{q.answer=null; q.flag=false;});
+  clearInterval(state.timerHandle);
+  state.timerHandle=setInterval(()=>{
+    state.timeLeft--;
+    if(state.timeLeft<=0){ state.timeLeft=0; clearInterval(state.timerHandle); submitExam(); }
+    renderTimerOnly();
+  },1000);
+  render();
+}
+
+function selectOption(qIndex, optIndex){
+  Q[qIndex].answer = optIndex;
+  render();
+}
+
+function toggleFlag(qIndex){
+  Q[qIndex].flag = !Q[qIndex].flag;
+  render();
+}
+
+function goTo(i){
+  if(i<0||i>=Q.length) return;
+  state.idx=i; state.navOpen=false;
+  render();
+}
+
+function submitExam(){
+  clearInterval(state.timerHandle);
+  state.screen='results'; state.reviewMode=false;
+  render();
+}
+
+function confirmSubmit(){
+  const unanswered = Q.filter(q=>q.answer===null).length;
+  if(unanswered>0){
+    if(!confirm(`لديك ${unanswered} سؤالاً لم تتم الإجابة عنه. هل تريد تسليم الاختبار الآن؟`)) return;
+  }
+  submitExam();
+}
+
+function retakeExam(){ startExam(); }
+
+/* ============================= RENDER ============================= */
+function render(){
+  const app = document.getElementById('app');
+  if(state.screen==='landing') app.innerHTML = renderLanding();
+  else if(state.screen==='exam') app.innerHTML = renderExam();
+  else app.innerHTML = renderResults();
+  window.scrollTo(0,0);
+}
+function renderTimerOnly(){
+  const el = document.getElementById('timerBox');
+  if(!el) return;
+  el.textContent = fmtTime(state.timeLeft);
+  el.parentElement.classList.toggle('low', state.timeLeft<=120);
+}
+
+function brandbarHtml(){
+  return `<div class="brandbar">
+    <div class="brandmark"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></div>
+    <div class="brandtext">
+      <div class="name">المدربة أم هشام</div>
+      <div class="tag">اختبار العمليات الحسابية</div>
+    </div>
+  </div>`;
+}
+
+function renderLanding(){
+  return `
+  ${brandbarHtml()}
+  <div class="landing-card">
+    <div class="eyebrow">تدريب القدرات — العمليات الحسابية</div>
+    <div class="landing-title">اختبار العمليات الحسابية (الجزء الأول)</div>
+    <p class="landing-sub">اختبار إلكتروني تفاعلي يغطي الكسور العشرية والاعتيادية، الأسس والجذور، القيمة المكانية، وخواص الأعداد — بإشراف المدربة أم هشام.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="num">${Q.length}</div><div class="lbl2">سؤالاً</div></div>
+      <div class="stat"><div class="num">٧٠</div><div class="lbl2">دقيقة</div></div>
+      <div class="stat"><div class="num">اختيار من متعدد</div><div class="lbl2">نوع الأسئلة</div></div>
+    </div>
+    <div class="rules">
+      <div><b>قبل البدء:</b></div>
+      <div>• يمكنك التنقّل بين الأسئلة بحرية والعودة لأي سؤال قبل التسليم.</div>
+      <div>• استخدم أيقونة العلم لوضع علامة على سؤال ترغب بمراجعته لاحقاً.</div>
+      <div>• سيُسلَّم الاختبار تلقائياً عند انتهاء الوقت.</div>
+      <div>• بعد التسليم ستظهر نتيجتك التفصيلية مع مراجعة كامل الحل.</div>
+    </div>
+    <button class="btn btn-primary" onclick="startExam()">ابدأ الاختبار الآن</button>
+  </div>`;
+}
+
+function renderExam(){
+  const q = Q[state.idx];
+  const answered = Q.filter(x=>x.answer!==null).length;
+  const pct = Math.round(((state.idx+1)/Q.length)*100);
+  const optionsHtml = q.options.map((o,i)=>`
+    <div class="opt ${q.answer===i?'selected':''}" onclick="selectOption(${state.idx},${i})">
+      <div class="letter">${['أ','ب','ج','د'][i]}</div>
+      <div class="otext">${o}</div>
+    </div>`).join('');
+
+  const navcells = Q.map((x,i)=>`
+    <div class="navcell ${x.answer!==null?'answered':''} ${i===state.idx?'current':''} ${x.flag?'flagged':''}"
+      onclick="goTo(${i})">${i+1}</div>`).join('');
+
+  return `
+  ${brandbarHtml()}
+  <div class="exambar">
+    <div class="qcount">سؤال ${state.idx+1} <small>/ ${Q.length}</small></div>
+    <div class="timer"><span id="timerBox">${fmtTime(state.timeLeft)}</span></div>
+    <div style="display:flex;gap:8px;">
+      <div class="iconbtn ${q.flag?'flagged':''}" onclick="toggleFlag(${state.idx})" title="وضع علامة">
+        <svg viewBox="0 0 24 24"><path d="M5 3v18M5 4h11l-3 4 3 4H5"/></svg>
+      </div>
+      <div class="iconbtn" onclick="state.navOpen=!state.navOpen; render();" title="خريطة الأسئلة">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="progress-outer"><div class="progress-inner" style="width:${pct}%"></div></div>
+
+  <div class="navgrid ${state.navOpen?'open':''}">
+    <h3>خريطة الأسئلة</h3>
+    <div class="navlegend">
+      <span><span class="legdot" style="background:var(--ok-pale);border:1px solid var(--ok);"></span> تمت الإجابة</span>
+      <span><span class="legdot" style="background:#fff;border:1px solid var(--line);"></span> بدون إجابة</span>
+      <span><span class="legdot" style="background:var(--gold);"></span> معلَّم للمراجعة</span>
+    </div>
+    <div class="navwrap">${navcells}</div>
+  </div>
+
+  <div class="qcard">
+    <div class="qmeta">
+      <span class="qnum-badge">السؤال ${state.idx+1}</span>
+      <span class="qcat">${q.cat}</span>
+    </div>
+    <div class="qtext">${q.text}</div>
+    ${q.diagram? q.diagram : ''}
+    <div class="options">${optionsHtml}</div>
+  </div>
+
+  <div class="navbtns">
+    <button class="btn btn-ghost" style="${state.idx===0?'opacity:.4;pointer-events:none;':''}" onclick="goTo(${state.idx-1})" ${state.idx===0?'disabled':''}>السابق</button>
+    ${state.idx===Q.length-1
+      ? `<button class="btn btn-danger" onclick="confirmSubmit()">تسليم الاختبار</button>`
+      : `<button class="btn btn-primary" onclick="goTo(${state.idx+1})">التالي</button>`}
+  </div>
+  <div style="text-align:center;color:var(--ink-soft);font-size:12.5px;margin-top:10px;">تمت الإجابة عن ${answered} من ${Q.length} سؤالاً</div>
+  `;
+}
+
+function renderResults(){
+  let correct=0, wrong=0, unanswered=0;
+  Q.forEach(q=>{
+    if(q.answer===null) unanswered++;
+    else if(q.answer===q.correct) correct++;
+    else wrong++;
+  });
+  const pct = Math.round((correct/Q.length)*100);
+
+  if(!state.reviewMode){
+    return `
+    ${brandbarHtml()}
+    <div class="score-hero">
+      <div class="brand-small">المدربة أم هشام — نتيجة الاختبار</div>
+      <h2>اختبار العمليات الحسابية (الجزء الأول)</h2>
+      <div class="score-circle">
+        <div class="pct">${pct}%</div>
+        <div class="of">${correct} من ${Q.length}</div>
+      </div>
+    </div>
+    <div class="result-grid">
+      <div class="rbox ok"><div class="n">${correct}</div><div class="l">إجابات صحيحة</div></div>
+      <div class="rbox bad"><div class="n">${wrong}</div><div class="l">إجابات خاطئة</div></div>
+      <div class="rbox na"><div class="n">${unanswered}</div><div class="l">بدون إجابة</div></div>
+    </div>
+    <div class="actionrow">
+      <button class="btn btn-primary" onclick="state.reviewMode=true; render();">مراجعة الإجابات</button>
+      <button class="btn btn-outline-danger" onclick="retakeExam()">إعادة الاختبار</button>
+    </div>
+    `;
+  }
+
+  const items = Q.map((q,i)=>{
+    let tag='na', tagText='بدون إجابة';
+    if(q.answer!==null){ if(q.answer===q.correct){tag='ok';tagText='إجابة صحيحة';} else {tag='bad';tagText='إجابة خاطئة';} }
+    const userAns = q.answer!==null? q.options[q.answer]: '<span style="color:#999">لم تتم الإجابة</span>';
+    const correctAns = q.options[q.correct];
+    return `<div class="review-item">
+      <div class="rtitle"><span class="qnum-badge" style="background:var(--ink-soft)">سؤال ${i+1}</span><span class="rtag ${tag}">${tagText}</span></div>
+      <div class="rq">${q.text}</div>
+      ${q.diagram? q.diagram:''}
+      <div class="rline">إجابتك: <b>${userAns}</b></div>
+      <div class="rline">الإجابة الصحيحة: <b>${correctAns}</b></div>
+      <div class="explain show">${q.explain}</div>
+    </div>`;
+  }).join('');
+
+  return `
+  ${brandbarHtml()}
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <h2 style="margin:0;color:var(--teal-deep);font-size:19px;">مراجعة الحل الكاملة</h2>
+    <button class="btn btn-ghost" onclick="state.reviewMode=false; render();">رجوع للنتيجة</button>
+  </div>
+  ${items}
+  <div class="actionrow" style="margin-top:10px;">
+    <button class="btn btn-outline-danger" onclick="retakeExam()">إعادة الاختبار</button>
+  </div>
+  `;
+}
+
+render();
+</script>
+</body>
+</html>
+
